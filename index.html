@@ -1,19 +1,46 @@
-<!doctype html>
-<html>
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<title>My static Space</title>
-		<link rel="stylesheet" href="style.css" />
-	</head>
-	<body>
-		<div class="card">
-			<h1>Welcome to your static Space!</h1>
-			<p>You can modify this app directly by editing <i>index.html</i> in the Files and versions tab.</p>
-			<p>
-				Also don't forget to check the
-				<a href="https://huggingface.co/docs/hub/spaces" target="_blank">Spaces documentation</a>.
-			</p>
-		</div>
-	</body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super JS Bros</title>
+    <!-- Use a premium, pixel-art style Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="ui-layer">
+        <h1 id="score-display">Score: 0</h1>
+        <div id="controls-hud" class="glassmorphism hidden" style="position: absolute; bottom: 30px; right: 30px; font-size: 0.7rem; padding: 12px 20px; opacity: 0.9;">
+            [A/D/ARROWS] Move &nbsp;|&nbsp; [W/UP/SPACE] Jump &nbsp;|&nbsp; [F] Shoot
+        </div>
+        
+        <div id="start-screen" class="screen glassmorphism">
+            <h1>Super JS Bros</h1>
+            <p>A Vanilla JS Platformer</p>
+            <br/>
+            <p>Press <span class="highlight">Enter</span> to Start</p>
+            <p class="controls">ARROWS/WASD to Move & Jump | F to Shoot</p>
+        </div>
+        
+        <div id="game-over-screen" class="screen glassmorphism hidden">
+            <h1>Game Over</h1>
+            <p id="final-score">Score: 0</p>
+            <br/>
+            <p>Press <span class="highlight">Enter</span> to Restart</p>
+        </div>
+
+        <div id="level-complete-screen" class="screen glassmorphism hidden">
+            <h1 style="color: #43b047;">Level Complete!</h1>
+            <p>You safely reached the castle.</p>
+            <br/>
+            <p>Press <span class="highlight">Enter</span> for Next Level</p>
+        </div>
+    </div>
+    
+    <!-- Game rendering happens here -->
+    <canvas id="gameCanvas"></canvas>
+    
+    <script src="main.js"></script>
+</body>
 </html>
