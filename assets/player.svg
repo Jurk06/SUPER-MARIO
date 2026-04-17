@@ -1,0 +1,35 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bodyGrad">
+      <stop offset="0%" stop-color="#ff4747"/>
+      <stop offset="100%" stop-color="#b80000"/>
+    </radialGradient>
+    <linearGradient id="overalls" x1="0" y1="0" x2="0" y2="1">
+       <stop offset="0%" stop-color="#3468d4"/>
+       <stop offset="100%" stop-color="#1d3f85"/>
+    </linearGradient>
+  </defs>
+  <!-- Head -->
+  <circle cx="50" cy="35" r="22" fill="#ffdfa8"/>
+  <!-- Mustache / Nose -->
+  <circle cx="65" cy="38" r="8" fill="#ffca7a"/>
+  <path d="M 50 45 Q 65 40 75 48 Q 65 52 50 45 Z" fill="#301905"/>
+  <!-- Hat -->
+  <path d="M 20 30 Q 50 5 80 30 Z" fill="#b80000"/>
+  <path d="M 20 30 Q 50 20 85 32 Q 85 36 20 34 Z" fill="#8f0000"/>
+  <!-- Body -->
+  <rect x="35" y="55" width="30" height="25" fill="url(#bodyGrad)" rx="8"/>
+  <path d="M 35 70 L 65 70 L 65 80 L 35 80 Z" fill="url(#overalls)"/>
+  <rect x="40" y="60" width="6" height="20" fill="url(#overalls)"/>
+  <rect x="54" y="60" width="6" height="20" fill="url(#overalls)"/>
+  <circle cx="43" cy="67" r="3" fill="#ffd500"/>
+  <circle cx="57" cy="67" r="3" fill="#ffd500"/>
+  <!-- Legs -->
+  <rect x="38" y="80" width="10" height="12" fill="url(#overalls)"/>
+  <rect x="52" y="80" width="10" height="12" fill="url(#overalls)"/>
+  <!-- Shoes -->
+  <path d="M 35 92 Q 43 88 48 95 L 35 95 Z" fill="#522f13"/>
+  <path d="M 68 92 Q 60 88 52 95 L 68 95 Z" fill="#522f13"/>
+  <!-- Eyes -->
+  <circle cx="58" cy="32" r="4" fill="#000"/>
+</svg>
