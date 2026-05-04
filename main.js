@@ -334,6 +334,79 @@ function initGame(isRestart = false) {
             if(Math.random() > 0.3) enemies.push(new Enemy(currentX + 50, canvas.height - 170));
             else hazards.push(new Hazard(currentX + platW/2 - 25, canvas.height - 150, 50, 50)); 
             currentX += platW;              
+        } else if (r < 0.85 && currentLevel >= 7) {
+            // LEVEL 7+: Triple stacked platforms with multiple enemies
+            let baseW = 200 + Math.random() * 100;
+            let startY = canvas.height - 200;
+            // Three tier platform
+            platforms.push(new Platform(currentX, startY, baseW, 40, 'brick'));
+            platforms.push(new Platform(currentX + 80, startY - 100, baseW, 40, 'brick'));
+            platforms.push(new Platform(currentX + 160, startY - 200, baseW, 40, 'brick'));
+            platforms.push(new Platform(currentX, canvas.height - 100, baseW + 200, 200, 'ground'));
+            enemies.push(new Enemy(currentX + 50, canvas.height - 170));
+            enemies.push(new Enemy(currentX + 150, canvas.height - 170));
+            currentX += baseW + 200;
+        } else if (r < 0.90 && currentLevel >= 8) {
+            // LEVEL 8+: Long fire pits requiring precise jumping
+            let gapStart = currentX + 200;
+            currentX += 200;
+            platforms.push(new Platform(currentX, canvas.height - 100, 100, 200, 'ground'));
+            currentX += 100;
+            // Series of fire hazards with small safe zones
+            for (let i = 0; i < 3; i++) {
+                currentX += 80 + Math.random() * 40;
+                platforms.push(new Platform(currentX, canvas.height - 100, 80, 200, 'ground'));
+                hazards.push(new Hazard(currentX + 15, canvas.height - 150, 50, 50));
+                currentX += 80;
+            }
+            currentX += 150;
+        } else if (r < 0.95 && currentLevel >= 9) {
+            // LEVEL 9+: Moving enemy gauntlet with floating platforms
+            let segmentCount = 4 + Math.floor(Math.random() * 3);
+            for (let i = 0; i < segmentCount; i++) {
+                let platW = 120 + Math.random() * 80;
+                let platY = canvas.height - 180 - Math.random() * 100;
+                platforms.push(new Platform(currentX, platY, platW, 40, 'brick'));
+                if (Math.random() > 0.4) {
+                    enemies.push(new Enemy(currentX + 20, platY - 70));
+                }
+                currentX += platW + 100 + Math.random() * 50;
+            }
+            platforms.push(new Platform(currentX, canvas.height - 100, 300, 200, 'ground'));
+            currentX += 300;
+        } else if (currentLevel >= 10) {
+            // LEVEL 10+: Ultimate challenge - mixed obstacles
+            let challengeType = Math.floor(Math.random() * 3);
+            if (challengeType === 0) {
+                // Staircase of doom
+                for (let i = 0; i < 5; i++) {
+                    let stepW = 100;
+                    let stepH = 50;
+                    platforms.push(new Platform(currentX + (i * stepW), canvas.height - 100 - (i * stepH), stepW + 20, stepH, 'brick'));
+                    if (i % 2 === 0) hazards.push(new Hazard(currentX + (i * stepW) + 25, canvas.height - 150 - (i * stepH), 50, 50));
+                }
+                currentX += 500;
+                platforms.push(new Platform(currentX, canvas.height - 100, 400, 200, 'ground'));
+                currentX += 400;
+            } else if (challengeType === 1) {
+                // Enemy fortress
+                platforms.push(new Platform(currentX, canvas.height - 100, 600, 200, 'ground'));
+                for (let i = 0; i < 4; i++) {
+                    enemies.push(new Enemy(currentX + 100 + (i * 120), canvas.height - 170));
+                }
+                hazards.push(new Hazard(currentX + 300, canvas.height - 150, 50, 50));
+                currentX += 600;
+            } else {
+                // Sky bridge with gaps
+                let bridgeY = canvas.height - 250;
+                for (let i = 0; i < 6; i++) {
+                    platforms.push(new Platform(currentX, bridgeY, 100, 40, 'brick'));
+                    if (i % 3 === 0) enemies.push(new Enemy(currentX + 15, bridgeY - 70));
+                    currentX += 100 + 70 + Math.random() * 50;
+                }
+                platforms.push(new Platform(currentX, canvas.height - 100, 300, 200, 'ground'));
+                currentX += 300;
+            }
         } else {
             // Standard Ground segments
             let w = 800 + Math.random() * 1000;
@@ -419,11 +492,13 @@ function animate() {
     // --- THEME ENGINE ---
     let theme = 'DAY';
     if (currentLevel === 3) theme = 'EVENING';
-    else if (currentLevel >= 4) theme = 'NIGHT';
+    else if (currentLevel >= 4 && currentLevel < 7) theme = 'NIGHT';
+    else if (currentLevel >= 7 && currentLevel < 10) theme = 'DAWN';
+    else if (currentLevel >= 10) theme = 'ABYSS';
 
     let activeBgImg = bgImg;
     if (theme === 'EVENING' && eveningBgImg.complete && eveningBgImg.width > 0) activeBgImg = eveningBgImg;
-    else if (theme === 'NIGHT' && nightBgImg.complete && nightBgImg.width > 0) activeBgImg = nightBgImg;
+    else if ((theme === 'NIGHT' || theme === 'ABYSS') && nightBgImg.complete && nightBgImg.width > 0) activeBgImg = nightBgImg;
 
     if (activeBgImg.complete && activeBgImg.width > 0) {
         const bgRatio = activeBgImg.height / activeBgImg.width;
@@ -441,10 +516,18 @@ function animate() {
         } else if (theme === 'NIGHT' && activeBgImg === bgImg) {
             ctx.fillStyle = 'rgba(0, 5, 40, 0.7)'; // Deep night overlay
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+        } else if (theme === 'DAWN' && activeBgImg === bgImg) {
+            ctx.fillStyle = 'rgba(255, 180, 50, 0.3)'; // Dawn overlay
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        } else if (theme === 'ABYSS' && activeBgImg === bgImg) {
+            ctx.fillStyle = 'rgba(60, 0, 80, 0.8)'; // Abyss overlay
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
     } else {
         if(theme === 'NIGHT') ctx.fillStyle = '#0c1445';
         else if (theme === 'EVENING') ctx.fillStyle = '#ff7b54';
+        else if (theme === 'DAWN') ctx.fillStyle = '#ffaa5a';
+        else if (theme === 'ABYSS') ctx.fillStyle = '#3d0f4d';
         else ctx.fillStyle = '#5C94FC';
         ctx.fillRect(0,0, canvas.width, canvas.height);
     }
